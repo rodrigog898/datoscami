@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Datos para transferir – Camila Salvo</title>
+  <style>
+    :root{
+      --bg1:#dff7d9; --bg2:#cfe6ff; --ink:#1f2937; --muted:#6b7280; --card:#ffffffcc; --ring:#e5e7eb;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Inter,"Helvetica Neue",Arial,sans-serif; color:var(--ink); background:linear-gradient(135deg,var(--bg1),var(--bg2));}
+    .wrap{min-height:100dvh; display:grid; place-items:center; padding:24px}
+    .card{width:min(780px,100%); background:var(--card); border:1px solid var(--ring); border-radius:20px; padding:28px; box-shadow:0 10px 30px rgba(0,0,0,.06)}
+    h1{margin:0 0 6px; font-size:clamp(24px,4vw,34px); font-weight:800}
+    p.lead{margin:0 0 20px; color:var(--ink); opacity:.85}
+    .grid{display:grid; gap:12px}
+    .row{display:flex; align-items:center; justify-content:space-between; gap:10px; background:#fff; border:1px solid var(--ring); border-radius:16px; padding:14px 16px}
+    .label{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+    .value{font-size:18px; font-weight:600; word-break:break-word}
+    button{appearance:none; border:1px solid var(--ring); background:#fff; border-radius:12px; padding:10px 14px; font-weight:600; cursor:pointer}
+    button:hover{filter:brightness(0.98)}
+    .all{margin-top:12px; width:100%; background-color: rgb(136, 214, 116); font-size: medium ;}
+    .foot{margin-top:14px; font-size:12px; color:var(--muted); text-align:center}
+    .toast{position:fixed; inset:auto 0 18px 0; display:flex; justify-content:center; pointer-events:none}
+    .toast span{background:#111; color:#fff; padding:10px 14px; border-radius:999px; font-size:14px; opacity:0; transform:translateY(10px); transition:.25s;}
+    .toast.show span{opacity:1; transform:translateY(0)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="region" aria-label="Datos bancarios para copiar">
+      <h1>Datos para transferir 💚</h1>
+      <p class="lead">Si deseas colaborar comprando completos o simplemente quieres apoyar la causa, cualquier aporte es bienvenido. Aquí te dejo los datos para transferir.</p>
+
+      <!-- 🔽 Verifica que el correo sea correcto y modifícalo si hace falta -->
+      <div class="grid" id="lista-datos">
+        <div class="row"><div><div class="label">Beneficiario</div><div class="value" id="beneficiario">Camila Salvo</div></div></div>
+        <div class="row"><div><div class="label">RUT</div><div class="value" id="rut">20.286.870-3</div></div></div>
+        <div class="row"><div><div class="label">Banco</div><div class="value" id="banco">Banco de Chile</div></div></div>
+        <div class="row"><div><div class="label">Tipo de cuenta</div><div class="value" id="tipo">Cuenta Vista</div></div></div>
+        <div class="row"><div><div class="label">N° de cuenta</div><div class="value" id="cuenta">07-402-02825-09</div></div></div>
+        <div class="row"><div><div class="label">Correo</div><div class="value" id="correo">salvoleppcamila@gmail.com</div></div></div>
+      </div>
+
+      <button class="all" id="copiar-todo">Copiar todo</button>
+      <div class="foot">Consejo: toca en cualquier botón "Copiar" y pega donde necesites (Ctrl/Cmd + V).</div>
+    </div>
+  </div>
+
+  <div class="toast" aria-live="polite" aria-atomic="true"><span id="toast-text"></span></div>
+
+  <script>
+    function toast(text){
+      const t = document.querySelector('.toast');
+      const s = document.getElementById('toast-text');
+      s.textContent = text; t.classList.add('show');
+      clearTimeout(window.__t);
+      window.__t = setTimeout(()=>t.classList.remove('show'), 1700);
+    }
+
+    async function copiarTexto(texto){
+      try{ await navigator.clipboard.writeText(texto); toast('¡Copiado!'); }
+      catch{ alert('No se pudo copiar automáticamente. Selecciona y copia manualmente.'); }
+    }
+
+    // Copiar por fila
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-copy');
+        const valor = document.getElementById(id).textContent.trim();
+        copiarTexto(valor);
+      });
+    });
+
+    // Copiar todo en formato listo para pegar
+    document.getElementById('copiar-todo').addEventListener('click', () => {
+      const datos = [
+        document.getElementById('beneficiario').textContent.trim(),
+        document.getElementById('rut').textContent.trim(),
+        document.getElementById('banco').textContent.trim(),
+        document.getElementById('tipo').textContent.trim(),
+        document.getElementById('cuenta').textContent.trim(),
+        document.getElementById('correo').textContent.trim(),
+      ].join('\n');
+      copiarTexto(datos);
+    });
+  </script>
+</body>
+</html>
